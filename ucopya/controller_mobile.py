@@ -1,6 +1,7 @@
 """Interact with an Ucopia captive portal"""
 
 import requests
+import time
 
 class ControllerMobile(object):
     """The class reponsible for interacting with the captive portal"""
@@ -29,3 +30,19 @@ class ControllerMobile(object):
             self.logged = True
             self.digest = req['user']['passwordDigest']['value']
             self.ssid   = req['user']['incomingZone']['value']
+
+    def do_update(self):
+        """Send a heartbeat to the captive portal to keep the connection up"""
+
+        if not self.logged:
+            self.login()
+
+        keepalive = {
+            'action'          : 'refresh',
+            'login'           : self.login,
+            'password_digest' : self.digest,
+            'time'            : int(time.time())
+        }
+
+        req = self.session.post(self.__PORTAL_API, keepalive)
+
