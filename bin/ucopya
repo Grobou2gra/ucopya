@@ -1,0 +1,14 @@
+#!/usr/bin/env python
+
+from ucopya import ControllerMobile
+import getpass
+
+if __name__ == '__main__':
+
+    cm = ControllerMobile(input('Username: '), getpass('Password: '))
+    cm.do_login()
+
+    while True:
+        time.sleep(20)
+        cm.do_update()
+
